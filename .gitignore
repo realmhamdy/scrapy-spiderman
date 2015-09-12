@@ -1,1 +1,4 @@
 *.py[cdo]
+.vagrant
+.idea
+description.md

@@ -1,2 +1,6 @@
-django==1.8
+django>=1.8
+cssselect
+lxml
 scrapy
+django-celery
+scrapy-djangoitem
