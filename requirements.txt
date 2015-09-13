@@ -4,3 +4,4 @@ lxml
 scrapy
 django-celery
 scrapy-djangoitem
+mock
