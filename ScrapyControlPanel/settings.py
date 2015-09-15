@@ -110,4 +110,5 @@ STATIC_URL = '/static/'
 
 SITE_ID = 1
 
-SPIDER_DIRS = []
+if DEBUG:
+    SPIDER_DIRS = []

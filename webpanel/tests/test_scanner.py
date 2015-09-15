@@ -4,7 +4,7 @@ from unittest import TestCase
 from os import path as pth
 import sys
 import mock
-from webpanel.spider_finder import find_spiders
+from webpanel.util import find_spiders
 
 
 class TestSpiderScan(TestCase):
