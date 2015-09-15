@@ -58,7 +58,8 @@ class SpiderRun(models.Model):
         return timesince(self.start_time, timezone.now() if self.finish_time is None else self.finish_time)
 
     def save(self, *args, **kwargs):
-        assert self.finish_time > self.start_time, "You've got a nice time machine, still this won't pass"
+        assert self.finish_time is None or \
+               self.finish_time > self.start_time, "You've got a nice time machine, still this won't pass"
         return super(SpiderRun, self).save(*args, **kwargs)
 
     class Meta:
