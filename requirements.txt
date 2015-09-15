@@ -5,3 +5,6 @@ scrapy
 django-celery
 scrapy-djangoitem
 mock
+cogapp
+pillow
+

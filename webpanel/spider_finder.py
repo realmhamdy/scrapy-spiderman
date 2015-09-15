@@ -6,10 +6,10 @@ from django.conf import settings
 
 
 def find_spiders():
+    # return paths to all spiders' settings modules
     settings_paths = []
     imported_settings = sys.modules.pop("settings", None)
     for spiders_dir in settings.SPIDER_DIRS:
-        # return full paths to all settings modules, for now.
         for (root, dirshere, fileshere) in walk_dir(spiders_dir):
             try:
                 fp, pathname, description = imp.find_module("settings", [root + os.sep])
@@ -19,7 +19,8 @@ def find_spiders():
                 try:
                     spider_settings = imp.load_module("settings", fp, pathname, description)
                     if hasattr(spider_settings, "SPIDER_MODULES"):
-                        settings_paths.append(pathname)
+                        settings_paths.append(os.path.dirname(pathname))
+                    sys.modules.pop("settings")
                 except ImportError:
                     pass
                 finally:

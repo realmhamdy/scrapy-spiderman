@@ -16,6 +16,8 @@ class CamoformalSpider(CrawlSpider):
     rules = [Rule(LxmlLinkExtractor(allow=[r"/bridal-gowns/\d+"]), callback="parse_item"),
              Rule(LxmlLinkExtractor(allow=[r"bridal-gowns.html\?p=\d+"]))]
 
+    ITEM_CLASS = CamoformalcrawlerItem
+
     def parse_item(self, response):
         item = CamoformalcrawlerItem()
         item["source_url"] = response.url

@@ -15,6 +15,8 @@ class SearchdisconnectSpider(CrawlSpider):
   rules = [Rule(LxmlLinkExtractor(restrict_xpaths=["//div[@class='pagination']"]),
                 callback="parse_links")]
 
+  ITEM_CLASS = SearchdisconnectcrawlerItem
+
   def __init__(self, keyword="porn", *args, **kwargs):
     super(SearchdisconnectSpider, self).__init__(*args, **kwargs)
     self._query = keyword
