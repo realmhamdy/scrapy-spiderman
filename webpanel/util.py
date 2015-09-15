@@ -66,8 +66,8 @@ def find_spiders():
 def enumerate_spider_classes():
     for settings_dir in find_spiders():
         sys.path.insert(0, settings_dir)
-        settings = import_module("settings")
-        for module_or_package_name in settings.SPIDER_MODULES:
+        spider_settings = import_module("settings")
+        for module_or_package_name in spider_settings.SPIDER_MODULES:
             sys.path.insert(0, pth.normpath(pth.join(settings_dir, pth.pardir)))
             for module in walk_modules(module_or_package_name):
                 for spider_cls in iter_spider_classes(module):

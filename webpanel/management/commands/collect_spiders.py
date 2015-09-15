@@ -5,7 +5,7 @@ from webpanel.util import generate_models, enumerate_spider_classes
 from webpanel.models import Spider
 
 
-class CollectSpidersCommand(BaseCommand):
+class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if getattr(settings, "SPIDER_DIRS", None) is None:
