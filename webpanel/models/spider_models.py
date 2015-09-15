@@ -53,26 +53,4 @@ for settings_dir in find_spiders():
     sys.modules.pop("settings")
 ]]]"""
 
-
-class CamoformalcrawlerItem(BaseItem):
-
-    timestamp = models.CharField(max_length=255, null=True, blank=True)
-    source_url = models.CharField(max_length=255, null=True, blank=True)
-    title = models.CharField(max_length=255, null=True, blank=True)
-    image = models.ImageField(upload_to="spiderfiles/CamoformalSpider/images")
-    sizes = models.CharField(max_length=255, null=True, blank=True)
-
-    class Meta:
-        app_label = 'webpanel'
-
-
-class SearchdisconnectcrawlerItem(BaseItem):
-
-    url = models.CharField(max_length=255, null=True, blank=True)
-    keyword = models.CharField(max_length=255, null=True, blank=True)
-
-    class Meta:
-        app_label = 'webpanel'
-
-
 #[[[end]]]

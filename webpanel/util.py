@@ -28,4 +28,4 @@ def generate_models():
 
 def erase_models():
     target_file = pth.join(pth.dirname(__file__), "models", "spider_models.py")
-    Cog().main([sys.argv[0], "-d", target_file])
+    Cog().main([sys.argv[0], "-x", target_file])
