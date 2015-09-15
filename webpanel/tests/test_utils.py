@@ -3,7 +3,6 @@ from os import path as pth
 import sys
 import mock
 from webpanel.util import find_spiders
-
 from webpanel.util import generate_models, erase_models
 
 
