@@ -29,6 +29,7 @@ class Spider(models.Model):
 
     class Meta:
         app_label = "webpanel"
+        ordering = ("name",)
 
     @property
     def item_model(self):
@@ -64,13 +65,16 @@ class SpiderRun(models.Model):
     )
 
     spider = models.ForeignKey(Spider, related_name="runs")
-    start_time = models.DateTimeField(auto_now=True, editable=False)
+    start_time = models.DateTimeField(auto_now_add=True, editable=False)
     finish_time = models.DateTimeField(null=True, blank=True, editable=False)
     finish_reason = models.CharField(choices=FINISH_CHOICES, max_length=32, editable=False)
     stopped = models.BooleanField(default=False, editable=False,
                                   help_text=_("Whether the user asked to stop the related spider"))
     logfile = models.FileField(upload_to=logfile_uploadto)
 
+    class Meta:
+        ordering = ("start_time",)
+        app_label = "webpanel"
 
     @property
     def finished(self):
@@ -92,7 +96,7 @@ class SpiderRun(models.Model):
         for fieldname, field in item.fields:
             if isinstance(field, Field) and fieldname in itemmodel_fieldnames:
                 if fieldname == "spider":
-                    warnings.warn("Use of 'spider' item attribute is reserved. Skipping field.")
+                    warnings.warn("Use of 'spider' item attribute is reserved. Skipping field.", UserWarning)
                     continue
                 setattr(model_instance, fieldname, item[fieldname])
         self.save()
@@ -101,10 +105,6 @@ class SpiderRun(models.Model):
     def items(self):
         # retrieves the items related manager for this run
         return getattr(self, "%s_%s_items" % ("webpanel", self.spider.item_model_name))
-
-    class Meta:
-        ordering = ("start_time",)
-        app_label = "webpanel"
 
     def __unicode__(self):
         datetime_fmt = "%d-%m-%Y %H:%M:%S %p"
