@@ -1,4 +1,5 @@
 *.py[cdo]
 .vagrant
-.idea
+.idea/
 description.md
+node_modules/
