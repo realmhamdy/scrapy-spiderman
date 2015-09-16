@@ -1,18 +1,18 @@
 import imp
-from os import walk as walk_dir
 import os
 import os.path as pth
 import sys
 from imp import reload
-from importlib import import_module
 from django.conf import settings
 from django import setup
 from django.core.management.commands.makemigrations import Command as MakeMigrationsCommand
 from django.core.management.commands.migrate import Command as MigrateCommand
 from scrapy.utils.misc import walk_modules
 from scrapy.utils.spider import iter_spider_classes
+from scrapy.utils.project import get_project_settings
 from cogapp import Cog
 from . import models
+from .models import SpiderProject
 from .models import spider_models
 
 
@@ -23,7 +23,7 @@ def start_django(**options):
         setup()
 
 
-def generate_models():
+def generate_item_models():
     target_file = pth.join(pth.dirname(__file__), "models", "spider_models.py")
     Cog().main([sys.argv[0], "-r", target_file])
     reload(spider_models)
@@ -37,12 +37,11 @@ def erase_models():
     Cog().main([sys.argv[0], "-x", target_file])
 
 
-def find_spiders():
-    # return paths to all spiders' settings modules
-    settings_paths = []
+def find_spider_projects():
+    # Creates SpiderProject objects for found Scrapy projects in SPIDER_DIRS setting
     imported_settings = sys.modules.pop("settings", None)
     for spiders_dir in settings.SPIDER_DIRS:
-        for (root, dirshere, fileshere) in walk_dir(spiders_dir):
+        for (root, dirshere, fileshere) in os.walk(spiders_dir):
             try:
                 fp, pathname, description = imp.find_module("settings", [root + os.sep])
             except ImportError:
@@ -51,7 +50,7 @@ def find_spiders():
                 try:
                     spider_settings = imp.load_module("settings", fp, pathname, description)
                     if hasattr(spider_settings, "SPIDER_MODULES"):
-                        settings_paths.append(os.path.dirname(pathname))
+                        spider_project = SpiderProject.objects.create(path=os.path.dirname(os.path.dirname(pathname)))
                     sys.modules.pop("settings")
                 except ImportError:
                     pass
@@ -60,18 +59,15 @@ def find_spiders():
     if imported_settings is not None:
         # is this how you re-import a module?
         sys.modules["settings"] = imported_settings
-    return settings_paths
 
 
 def enumerate_spider_classes():
-    for settings_dir in find_spiders():
-        sys.path.insert(0, settings_dir)
-        spider_settings = import_module("settings")
-        for module_or_package_name in spider_settings.SPIDER_MODULES:
-            sys.path.insert(0, pth.normpath(pth.join(settings_dir, pth.pardir)))
+    original_cd = os.getcwd()
+    for spider_project in SpiderProject.objects.all():
+        os.chdir(spider_project.path)
+        project_settings = get_project_settings()
+        for module_or_package_name in project_settings.SPIDER_MODULES:
             for module in walk_modules(module_or_package_name):
                 for spider_cls in iter_spider_classes(module):
-                    yield spider_cls
-            sys.path.pop(0)
-        sys.path.pop(0)
-        sys.modules.pop("settings")
+                    yield (spider_project, spider_cls)
+    os.chdir(original_cd)

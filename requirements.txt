@@ -2,9 +2,8 @@ django>=1.8
 cssselect
 lxml
 scrapy
-django-celery
-scrapy-djangoitem
 mock
 cogapp
 pillow
-
+celery==3.1.18
+supervisor  # linux only
