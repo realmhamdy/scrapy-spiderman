@@ -1,3 +1,4 @@
+import json
 from django.views.generic import ListView, TemplateView, View
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
@@ -88,3 +89,18 @@ class RunItemsView(TemplateView):
         ITEM_MODEL = context["run"].get_item_model_class()
         context["fieldnames"] = [field.name for field in ITEM_MODEL._meta.get_fields(include_parents=False)]
         return context
+
+
+class RunCountersView(View):
+
+    http_method_names = ["get"]
+
+    def get(self, request, *args, **kwargs):
+        run_id = int(self.kwargs["run_id"])
+        if not request.is_ajax():
+            return HttpResponseRedirect(reverse("home"))
+        target_run = get_object_or_404(SpiderRun, id=run_id)
+        data = dict()
+        data["itemcount"] = target_run.items.count()
+        data["logcount"] = target_run.logcount
+        return HttpResponse(content=json.dumps(data), content_type="application/json")

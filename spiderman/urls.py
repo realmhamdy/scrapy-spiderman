@@ -9,7 +9,8 @@ spider_patterns = [
 spiderrun_patterns = [
     url(r"^stop/$", views.RunStopView.as_view(), name="stop_run"),
     url(r"^(?P<run_id>\d+)/log/$", views.RunLogView.as_view(), name="run_log"),
-    url(r"^(?P<run_id>\d+)/items/$", views.RunItemsView.as_view(), name="run_items")
+    url(r"^(?P<run_id>\d+)/items/$", views.RunItemsView.as_view(), name="run_items"),
+    url(r"(?P<run_id>\d+)/counters/$", views.RunCountersView.as_view(), name="run_counters")
 ]
 
 urlpatterns = [

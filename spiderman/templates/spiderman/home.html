@@ -7,14 +7,14 @@
     <script type="text/javascript" src="{% static 'spiderman/js/ui-bootstrap-tpls.min.js' %}"></script>
 {% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="container" data-ng-app="spiderApp">
         <div class="row">
             <div class="col-sm-12">
                 {% for spider in spiders %}
                     <div class="panel {{ spider.running|yesno:"panel-success,panel-default" }}">
                         <div class="panel-heading">
                             <h3 class="panel-title">{{ spider.name|upper }}
-                                {% if not spider.running %}
+                                {% if not spider.running %}{# make a directive that's called running-spider or something that updates a running spider counters #}
                                 <form method="post" action="{% url 'start_spider' %}" style="display: inline;">{% csrf_token %}
                                     <input type="hidden" name="id" value="{{ spider.id }}">
                                     <button class="button btn-success btn-sm pull-right" type="submit">{% trans 'Run' %}</button>
@@ -40,6 +40,7 @@
                             {% for run in spider.runs.all %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
+
                                     <td><a href="{% url 'run_items' run.id %}">{{ run.items.count }}</a></td>
                                     <td><a href="{% url 'run_log' run.id %}">{{ run.logcount }}</a></td>
                                     <td>{{ run.start_time }}</td>
@@ -63,4 +64,14 @@
                     </div>
                 {% endfor %}
     </div>
+    <script>
+        angular.module("spiderApp", [])
+                .directive("runningSpider", function() {
+                    return  {
+                        // maybe you want a special scope for the directive to retrieve the data in and update your
+                        // elements
+                        
+                    };
+                });
+    </script>
 {% endblock %}
