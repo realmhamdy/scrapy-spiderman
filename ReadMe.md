@@ -40,7 +40,7 @@ There's currently one required setting: `SPIDER_DIRS`.
 It should be a list of disk directories on your system. Each can contain one or more Scrapy projects (created with the 
 `startproject` command.
 
-Then your need to run:
+Then you'll need to run:
 
     python manage.py collect_spiders
 
