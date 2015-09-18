@@ -39,10 +39,12 @@ def start_spider(spider_id):
     deferred.addErrback(spiderrun_fail_wrapper(spider_run))
     deferred.addBoth(lambda _: reactor.stop())
 
-    def check_stop_spider(runner, run_id):
+    def check_stop_spider(runner, run_id, task):
         if SpiderRun.objects.get(id=run_id).stopped:
             runner.stop()
+            task.kw.pop("task").stop()
     periodic_stop_check = task.LoopingCall(check_stop_spider, runner, spider_run.id)
+    periodic_stop_check.kw["task"] = periodic_stop_check  # allow my check access to the task to be able to stop it [hack]
     periodic_stop_check.start(15, now=False)
     # attach the run id to the spider class. This will be used later in the saving pipeline
     setattr(spider_cls, "_run_id_", spider_run.id)
