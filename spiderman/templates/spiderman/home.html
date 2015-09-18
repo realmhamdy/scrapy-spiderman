@@ -1,0 +1,64 @@
+{% extends 'spiderman/base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block subtitle %}{% trans 'Dashboard' %}{% endblock %}
+{% block into_head %}
+    <script type="text/javascript" src="{% static 'spiderman/js/angular.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'spiderman/js/ui-bootstrap-tpls.min.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                {% for spider in spiders %}
+                    <div class="panel {{ spider.running|yesno:"panel-success,panel-default" }}">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ spider.name|upper }}</h3>
+                            {% if not spider.running %}
+                                <form method="post" action="{% url 'start_spider' %}" style="display: inline;">{% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ spider.id }}">
+                                    <button class="button btn-success btn-sm pull-right" type="submit">{% trans 'Run' %}</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Items</th>
+                                <th>Logs</th>
+                                <th>{% trans 'Started At' %}</th>
+                                <th>{% trans 'Finished At' %}</th>
+                                <th>{% trans 'Finish Reason' %}</th>
+                                <th>{% trans 'Total Run Time' %}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for run in spider.runs.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a href="{% url 'run_items' run.id %}">{{ run.items.count }}</a></td>
+                                    <td><a href="{% url 'run_log' run.id %}">{{ run.logcount }}</a></td>
+                                    <td>{{ run.start_time }}</td>
+                                    <td>{{ run.finish_time|default_if_none:"Running" }}</td>
+                                    <td>{{ run.get_finish_reason_display|default_if_none:"_" }}</td>
+                                    <td>{{ run.runtime }}</td>
+                                    <td>{% if not run.finish_time %}
+                                        <form method="post" action="{% url 'stop_run' %}">{% csrf_token %}
+                                            <input type="hidden" name="run_id" value="{{ run.id }}"/>
+                                            <button type="submit"
+                                                    class="button btn-danger btn-lg">{% trans 'Stop Run' %}</button>
+                                        </form>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                    </div>
+                {% endfor %}
+    </div>
+{% endblock %}

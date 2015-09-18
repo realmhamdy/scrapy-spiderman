@@ -1,0 +1,13 @@
+{% extends 'spiderman/base.html' %}
+{% load i18n %}
+{% block subtitle %}{{ spider_run.spider.name }}'s {% trans 'Log' %}{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2 class="page-header">{{ spider_run.spider.name|upper }}'s {% trans 'Log' %}</h2>
+        <div class="row">
+            <div class="col-xs-12">
+                <textarea style="width: 100%; height: 480px;">{{ spider_run.logfile.read|force_escape }}</textarea>
+            </div>
+        </div>
+    </div>
+{% endblock %}

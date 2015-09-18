@@ -1,0 +1,28 @@
+{% extends 'spiderman/base.html' %}
+{% load i18n %}
+{% load spiderman_tags %}
+{% block subtitle %}{{ run.spider.name }}'s {% trans 'Items' %}{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="page-header">{{ run.spider.name|upper }}'s {% trans 'Items' %}</h2>
+                {% for item in run.items.all %}
+                    <div class="list-group">
+                        {% for fieldname in fieldnames %}
+                            <div class="list-group-item">
+                                <h3 class="list-group-item-heading">{{ fieldname }}</h3>
+                                {% if fieldname == "file" %}
+                                {% elif fieldname == "image" %}
+                                    <img class="img-responsive" src="{{ item|get_attr:"image"|get_attr:"url" }}">
+                                {% else %}
+                                    <p class="list-group-item-text">{{ item|get_attr:fieldname }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

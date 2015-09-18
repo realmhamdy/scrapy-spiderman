@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webpanel',
+    'spiderman',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,4 +115,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 if DEBUG:
-    SPIDER_DIRS = []
+    SPIDER_DIRS = [os.path.join(BASE_DIR, "spiderman", "tests", "test_spiders")]
