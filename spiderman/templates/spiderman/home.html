@@ -40,9 +40,15 @@
                             {% for run in spider.runs.all %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-
-                                    <td><a href="{% url 'run_items' run.id %}">{{ run.items.count }}</a></td>
-                                    <td><a href="{% url 'run_log' run.id %}">{{ run.logcount }}</a></td>
+                                    {% if run.finish_time %}
+                                        <td><a href="{% url 'run_items' run.id %}">{{ run.items.count }}</a></td>
+                                        <td><a href="{% url 'run_log' run.id %}">{{ run.logcount }}</a></td>
+                                    {% else %}
+                                        <running-spider run-id="{{ run.id }}">
+                                            <td><a href="{% url 'run_items' run.id %}">{% verbatim %}{{ itemcount }}{% endverbatim %}</a></td>
+                                            <td><a href="{% url 'run_log' run.id %}">{% verbatim %}{{ logcount }}{% endverbatim %}</a></td>
+                                        </running-spider>
+                                    {% endif %}
                                     <td>{{ run.start_time }}</td>
                                     <td>{{ run.finish_time|default_if_none:"Running" }}</td>
                                     <td>{{ run.get_finish_reason_display|default_if_none:"_" }}</td>
@@ -66,11 +72,30 @@
     </div>
     <script>
         angular.module("spiderApp", [])
-                .directive("runningSpider", function() {
+                .directive("runningSpider", function($interval, $http) {
                     return  {
-                        // maybe you want a special scope for the directive to retrieve the data in and update your
-                        // elements
-
+                        link: function(scope, element, attrs) {
+                            var updateSpidersTimeoutID;
+                            scope.stopped = false;
+                            scope.logcount = scope.itemcount = 0;
+                            scope.stopUpdates = function () {
+                                $interval.cancel(updateSpidersTimeoutID);
+                                scope.stopped = true;
+                            };
+                            updateSpidersTimeoutID = $interval(function() {
+                                $http.get("{% url 'run_stats' %}" + '?' + $.param({run_id: attrs.runId}),
+                                        {
+                                            headers: {
+                                                HTTP_X_REQUESTED_WITH: "XMLHttpRequest"
+                                            }
+                                        })
+                                        .then(function(response){
+                                            scope.logcount = response.data.logcount;
+                                            scope.itemcount = response.data.itemcount;
+                                        });
+                            }, 15000);
+                        },
+                        template: "<ng-transclude></ng-transclude>"
                     };
                 });
     </script>

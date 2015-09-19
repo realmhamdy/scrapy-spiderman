@@ -91,14 +91,12 @@ class RunItemsView(TemplateView):
         return context
 
 
-class RunCountersView(View):
+class RunStatsView(View):
 
     http_method_names = ["get"]
 
     def get(self, request, *args, **kwargs):
-        run_id = int(self.kwargs["run_id"])
-        if not request.is_ajax():
-            return HttpResponseRedirect(reverse("home"))
+        run_id = int(request.GET["run_id"])
         target_run = get_object_or_404(SpiderRun, id=run_id)
         data = dict()
         data["itemcount"] = target_run.items.count()
