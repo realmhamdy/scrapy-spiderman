@@ -5,4 +5,7 @@ register = Library()
 
 @register.filter
 def get_attr(obj, attrname):
-    return getattr(obj, attrname, '')
+    try:
+        return getattr(obj, attrname, '')
+    except Exception:
+        return ''

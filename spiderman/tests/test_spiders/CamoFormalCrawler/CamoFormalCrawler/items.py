@@ -14,3 +14,4 @@ class CamoformalcrawlerItem(scrapy.Item):
     title = scrapy.Field()
     sizes = scrapy.Field()
     image_urls = scrapy.Field()
+    images = scrapy.Field()

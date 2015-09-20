@@ -20,7 +20,11 @@ DOWNLOAD_DELAY = 5
 SPIDER_MIDDLEWARES = {'scrapy.contrib.spidermiddleware.offsite.OffsiteMiddleware': None}
 
 ITEM_PIPELINES = {
+    'scrapy.pipelines.images.ImagesPipeline': 1,
+    "spiderman.pipelines.FixRelativeDownloadedImagesPipeline": 2,
     "spiderman.pipelines.SaveItemPipeline": 1000
 }
 
 EXTENSIONS = {'scrapy.contrib.feedexport.FeedExporter': None}
+
+IMAGES_STORE = "/home/vagrant/downloads"

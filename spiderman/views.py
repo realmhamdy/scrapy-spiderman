@@ -87,7 +87,8 @@ class RunItemsView(TemplateView):
         context["run"] = self._get_run()
         # collect fieldnames of the [unknown] item model
         ITEM_MODEL = context["run"].get_item_model_class()
-        context["fieldnames"] = [field.name for field in ITEM_MODEL._meta.get_fields(include_parents=False)]
+        context["fieldnames"] = [field.name for field in ITEM_MODEL._meta.get_fields(include_parents=False)
+                                 if field.name not in ["id", "spider_run"]]
         return context
 
 
