@@ -8,7 +8,7 @@ It uses Django/PostgreSQL for the backend and Celery to run the spiders in the b
 
 It'll automatically generate models from your spider's items. But you'll need to [modify your spiders](#modify-your-spiders).
 
-## Usage ##
+## Installation ##
     
 ### Manual Method ###
 
@@ -33,6 +33,23 @@ file for the full command).
         vagrant up
 
 Wait until the command is done. You'll have the web interface accessible at `http://localhost:8080`
+
+#### Vagrant Notes ####
+
+If you use the vagrant method and want to add one or more directories to the `SPIDER_DIRS` setting,
+you'll need to share them from your host machine to the guest VM.
+Here's an example to add to **Vagrantfile**:
+
+    # config.vm.synced_folder "C:/Users/Adri/spiders", "/home/vagrant/myspiders"
+
+This will share **C:/Users/Adri/spiders** into **/home/vagrant/myspiders** on your VM.
+So you can now use:
+
+    SPIDER_DIRS = ['/home/vagrant/myspiders']
+    
+And then collect spiders.
+This example is available in **Vagrantfile** to modify.
+
 
 ### Update the Settings ###
 

@@ -57,7 +57,7 @@
                                         <form method="post" action="{% url 'stop_run' %}">{% csrf_token %}
                                             <input type="hidden" name="run_id" value="{{ run.id }}"/>
                                             <button type="submit"
-                                                    class="button btn-danger">{% trans 'Stop Run' %}</button>
+                                                    class="btn btn-default btn-danger">{% trans 'Stop Run' %}</button>
                                         </form>
                                     {% endif %}
                                     </td>

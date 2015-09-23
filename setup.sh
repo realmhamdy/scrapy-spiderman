@@ -1,5 +1,8 @@
 sudo apt-get install -y python-pip python-dev libxml2-dev libxslt-dev zlib1g-dev python-psycopg2 postgresql \
     postgresql-contrib rabbitmq-server python-twisted
+    
+sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'password';"
+sudo -u postgres createdb scrapypanel
 pushd /vagrant
 sudo pip install -r requirements.txt
 
