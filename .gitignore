@@ -4,3 +4,6 @@
 description.md
 node_modules/
 media/
+spiderman/models/spider_models.py
+spiderman/migrations
+
