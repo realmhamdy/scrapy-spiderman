@@ -1,0 +1,2 @@
+# my fork of django-extensions
+-e git+https://github.com/github-account-because-they-want-it/django-extensions.git#egg=django-extensions

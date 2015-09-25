@@ -1,0 +1,43 @@
+{% extends 'runscripts/base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block subtitle %}{% trans 'Dashboard' %}{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <strong>{{ message }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-primary">
+                <h2 class="panel-heading">Available scripts</h2>
+                <div class="panel-body">
+                    <form method="post" action="{% url 'runscripts_run' %}">{% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label">Select script</label>
+                            <select name="script_path" class="form-control">
+                                {% for script in scripts %}
+                                    <option value="{{ script }}">{{ script }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Commandline Arguments</label>
+                            <input type="text" name="cmdline_args" class="form-control">
+                        </div>
+                        <div class="form-actions">
+                            <input type="submit" class="btn btn-default btn-success" value="Run Script">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

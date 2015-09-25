@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r"^spiderman/", include("spiderman.urls")),
+    url(r"^scripts/", include("runscripts.urls")),
     url(r'^admin/', include(admin.site.urls))
 ]
 

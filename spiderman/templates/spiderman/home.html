@@ -15,7 +15,7 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">{{ spider.name|upper }}
                                 {% if not spider.running %}{# make a directive that's called running-spider or something that updates a running spider counters #}
-                                <form method="post" action="{% url 'start_spider' %}" style="display: inline;">{% csrf_token %}
+                                <form method="post" action="{% url 'spiderman_start_spider' %}" style="display: inline;">{% csrf_token %}
                                     <input type="hidden" name="id" value="{{ spider.id }}">
                                     <button class="button btn-success btn-sm pull-right" type="submit">{% trans 'Run' %}</button>
                                 </form>
@@ -41,12 +41,12 @@
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
                                     {% if run.finish_time %}
-                                        <td><a href="{% url 'run_items' run.id %}">{{ run.items.count }}</a></td>
-                                        <td><a href="{% url 'run_log' run.id %}">{{ run.logcount }}</a></td>
+                                        <td><a href="{% url 'spiderman_run_items' run.id %}">{{ run.items.count }}</a></td>
+                                        <td><a href="{% url 'spiderman_run_log' run.id %}">{{ run.logcount }}</a></td>
                                     {% else %}
                                         <running-spider run-id="{{ run.id }}">
-                                            <td><a href="{% url 'run_items' run.id %}">{% verbatim %}{{ itemcount }}{% endverbatim %}</a></td>
-                                            <td><a href="{% url 'run_log' run.id %}">{% verbatim %}{{ logcount }}{% endverbatim %}</a></td>
+                                            <td><a href="{% url 'spiderman_run_items' run.id %}">{% verbatim %}{{ itemcount }}{% endverbatim %}</a></td>
+                                            <td><a href="{% url 'spiderman_run_log' run.id %}">{% verbatim %}{{ logcount }}{% endverbatim %}</a></td>
                                         </running-spider>
                                     {% endif %}
                                     <td>{{ run.start_time }}</td>
@@ -54,7 +54,7 @@
                                     <td>{{ run.get_finish_reason_display|default_if_none:"_" }}</td>
                                     <td>{{ run.runtime }}</td>
                                     <td>{% if not run.finish_time %}
-                                        <form method="post" action="{% url 'stop_run' %}">{% csrf_token %}
+                                        <form method="post" action="{% url 'spiderman_stop_run' %}">{% csrf_token %}
                                             <input type="hidden" name="run_id" value="{{ run.id }}"/>
                                             <button type="submit"
                                                     class="btn btn-default btn-danger">{% trans 'Stop Run' %}</button>
@@ -83,7 +83,7 @@
                                 scope.stopped = true;
                             };
                             updateSpidersTimeoutID = $interval(function() {
-                                $http.get("{% url 'run_stats' %}" + '?' + $.param({run_id: attrs.runId}),
+                                $http.get("{% url 'spiderman_run_stats' %}" + '?' + $.param({run_id: attrs.runId}),
                                         {
                                             headers: {
                                                 HTTP_X_REQUESTED_WITH: "XMLHttpRequest"

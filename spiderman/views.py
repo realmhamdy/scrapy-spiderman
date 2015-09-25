@@ -30,7 +30,7 @@ class StartSpiderView(View):
         if request.is_ajax():
             return HttpResponse(status=200)
         else:
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("spiderman_home"))
 
 
 class RunStopView(View):
@@ -46,7 +46,7 @@ class RunStopView(View):
         target_run.save()
         if request.is_ajax():
             return HttpResponse(status=200)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("spiderman_home"))
 
 
 class RunLogView(TemplateView):
